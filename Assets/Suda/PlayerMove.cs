@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class PlayerMove : MonoBehaviour
 {
@@ -11,15 +12,14 @@ public class PlayerMove : MonoBehaviour
     public float zPosition = -1f;
 
     [Header("アビリティ関連")]
-    public bool hasAbility = false; 
+    public bool hasAbility = false;
 
     private bool canMove = true;
-    private int stepsRemaining;
     private Vector3 targetPos;
+    private bool hitWall = false;
 
     void Start()
     {
-        stepsRemaining = maxSteps;
         targetPos = transform.position;
     }
 
@@ -40,10 +40,12 @@ public class PlayerMove : MonoBehaviour
         transform.position = new Vector3(transform.position.x, transform.position.y, zPosition);
     }
 
-    System.Collections.IEnumerator MoveTo(Vector3 target)
+    IEnumerator MoveTo(Vector3 target)
     {
         canMove = false;
-        while (Vector2.Distance(transform.position, target) > 0.05f)
+        hitWall = false;
+
+        while (!hitWall && Vector2.Distance(transform.position, target) > 0.05f)
         {
             transform.position = Vector2.MoveTowards(transform.position, target, moveSpeed * Time.deltaTime);
             transform.position = new Vector3(transform.position.x, transform.position.y, zPosition);
@@ -56,7 +58,11 @@ public class PlayerMove : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Enemy"))
+        if (other.CompareTag("Wall"))
+        {
+            hitWall = true; 
+        }
+        else if (other.CompareTag("Enemy"))
         {
             if (hasAbility)
             {
