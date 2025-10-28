@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections;
 using UnityEngine.SceneManagement;
@@ -6,15 +6,17 @@ using UnityEngine.SceneManagement;
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerMove : MonoBehaviour
 {
-    [Header("�ݒ�")]
+    [Header("設定")]
     public float moveSpeed = 5f;
     public float maxStepDistance = 3f;
     public float zPosition = -1f;
-    public float moveDelay = 1f; 
+    public float moveDelay = 2f;
+    public float stunDuration = 2f; // 敵スタン時間
 
     private Vector2 targetPosition;
     private bool isMoving = false;
     private bool canMove = true;
+    private bool hasCherryAbility = false; // 🍒能力フラグ
     private Camera mainCam;
     private Rigidbody2D rb;
 
@@ -22,7 +24,7 @@ public class PlayerMove : MonoBehaviour
     {
         mainCam = Camera.main;
         rb = GetComponent<Rigidbody2D>();
-        rb.gravityScale = 0f; 
+        rb.gravityScale = 0f;
         rb.constraints = RigidbodyConstraints2D.FreezeRotation;
 
         targetPosition = transform.position;
@@ -60,7 +62,7 @@ public class PlayerMove : MonoBehaviour
             if (Vector2.Distance(rb.position, targetPosition) < 0.01f)
             {
                 isMoving = false;
-                StartCoroutine(MoveCooldown()); 
+                StartCoroutine(MoveCooldown());
             }
         }
 
@@ -89,9 +91,33 @@ public class PlayerMove : MonoBehaviour
     {
         if (other.CompareTag("Enemy"))
         {
-            Debug.Log("Player���G�ɓ������Ď��S");
-            Die();
+            if (hasCherryAbility)
+            {
+                // 🍒能力発動中ならEnemyをスタンさせる
+                EnemyMove enemy = other.GetComponent<EnemyMove>();
+                if (enemy != null)
+                {
+                    enemy.Stun(stunDuration);
+                }
+            }
+            else
+            {
+                // 通常時は死亡
+                Debug.Log("Playerが敵に当たって死亡");
+                Die();
+            }
         }
+        else if (other.CompareTag("Goal"))
+        {
+            Debug.Log("🎯 ゴール！次のステージへ");
+            SceneManager.LoadScene("SUDA_stage02");
+        }
+    }
+
+    public void ActivateCherryAbility()
+    {
+        hasCherryAbility = true;
+        Debug.Log("🍒 アビリティ発動中！Enemyに当たっても死なない");
     }
 
     void Die()
@@ -99,4 +125,3 @@ public class PlayerMove : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
-
