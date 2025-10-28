@@ -11,8 +11,7 @@ public class EnemyMove : MonoBehaviour
     public float zPosition = -1f;
 
     private Vector2 startPos;
-    private bool isMoving = false;
-    private bool isStunned = false;
+    private bool isStunned = false; 
 
     void Start()
     {
@@ -37,37 +36,24 @@ public class EnemyMove : MonoBehaviour
             }
             else
             {
-                yield return null; // スタン中は停止
+                yield return null;
             }
         }
     }
 
     IEnumerator MoveTo(Vector2 target)
     {
-        isMoving = true;
-        while (!isStunned && Vector2.Distance(transform.position, target) > 0.01f)
+        while (Vector2.Distance(transform.position, target) > 0.01f && !isStunned)
         {
             transform.position = Vector2.MoveTowards(transform.position, target, moveSpeed * Time.deltaTime);
             transform.position = new Vector3(transform.position.x, transform.position.y, zPosition);
             yield return null;
         }
-        isMoving = false;
     }
 
-    // 🔹 スタン処理
-    public void Stun(float duration)
+    public void StunEnemy()
     {
-        if (!isStunned)
-            StartCoroutine(StunRoutine(duration));
-    }
-
-    private IEnumerator StunRoutine(float duration)
-    {
-        Debug.Log($"{gameObject.name} がスタンした！");
         isStunned = true;
-        yield return new WaitForSeconds(duration);
-        isStunned = false;
-        Debug.Log($"{gameObject.name} のスタン解除！");
     }
 
     void Update()
