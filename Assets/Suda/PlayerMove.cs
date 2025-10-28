@@ -10,7 +10,7 @@ public class PlayerMove : MonoBehaviour
     public float moveSpeed = 5f;
     public float maxStepDistance = 3f;
     public float zPosition = -1f;
-    public float moveDelay = 2f; 
+    public float moveDelay = 1f; 
 
     private Vector2 targetPosition;
     private bool isMoving = false;
