@@ -78,4 +78,9 @@ public class PlayerMove : MonoBehaviour
             SceneManager.LoadScene("SUDA_stage02");
         }
     }
+
+    public void ActivateCherryAbility()
+    {
+        hasAbility = true;
+    }
 }
