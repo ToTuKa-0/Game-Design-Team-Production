@@ -1099,6 +1099,7 @@ GameObject:
   - component: {fileID: 62218342}
   - component: {fileID: 62218341}
   - component: {fileID: 62218344}
+  - component: {fileID: 62218345}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Enemy
@@ -1242,6 +1243,28 @@ MonoBehaviour:
   moveSteps: 3
   waitTime: 0.5
   zPosition: -1
+--- !u!95 &62218345
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 62218340}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: bef47be70b198e94b9314a7d7126b38c, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &67126392
 GameObject:
   m_ObjectHideFlags: 0
@@ -25231,6 +25254,7 @@ GameObject:
   - component: {fileID: 1727092501}
   - component: {fileID: 1727092500}
   - component: {fileID: 1727092503}
+  - component: {fileID: 1727092504}
   m_Layer: 0
   m_Name: Enemy (1)
   m_TagString: Enemy
@@ -25374,6 +25398,28 @@ MonoBehaviour:
   moveSteps: 3
   waitTime: 0.5
   zPosition: -1
+--- !u!95 &1727092504
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1727092499}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: bef47be70b198e94b9314a7d7126b38c, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1727313054
 GameObject:
   m_ObjectHideFlags: 0
