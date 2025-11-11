@@ -9,6 +9,8 @@ TagManager:
   - Cherry
   - Wall
   - Goal1
+  - Goal2
+  - Goal3
   layers:
   - Default
   - TransparentFX
