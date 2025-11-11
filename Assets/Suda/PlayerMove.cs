@@ -79,7 +79,7 @@ public class PlayerMove : MonoBehaviour
             hasAbility = true;
             Destroy(other.gameObject);
         }
-        else if (other.CompareTag("Goal"))
+        else if (other.CompareTag("Goal1"))
         {
             SceneManager.LoadScene("SUDA_stage02");
         }
