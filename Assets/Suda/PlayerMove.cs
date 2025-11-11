@@ -14,6 +14,9 @@ public class PlayerMove : MonoBehaviour
     [Header("アビリティ関連")]
     public bool hasAbility = false;
 
+    [Header("アニメーション設定")]
+    public Animator animator; 
+
     private bool canMove = true;
     private Vector3 targetPos;
     private bool hitWall = false;
@@ -21,6 +24,9 @@ public class PlayerMove : MonoBehaviour
     void Start()
     {
         targetPos = transform.position;
+
+        if (animator == null)
+            animator = GetComponent<Animator>();
     }
 
     void Update()
@@ -45,12 +51,18 @@ public class PlayerMove : MonoBehaviour
         canMove = false;
         hitWall = false;
 
+        if (animator != null)
+            animator.SetBool("Walk", true); 
+
         while (!hitWall && Vector2.Distance(transform.position, target) > 0.05f)
         {
             transform.position = Vector2.MoveTowards(transform.position, target, moveSpeed * Time.deltaTime);
             transform.position = new Vector3(transform.position.x, transform.position.y, zPosition);
             yield return null;
         }
+
+        if (animator != null)
+            animator.SetBool("Walk", false);
 
         yield return new WaitForSeconds(moveDelay);
         canMove = true;
@@ -60,7 +72,7 @@ public class PlayerMove : MonoBehaviour
     {
         if (other.CompareTag("Wall"))
         {
-            hitWall = true; 
+            hitWall = true;
         }
         else if (other.CompareTag("Enemy"))
         {
