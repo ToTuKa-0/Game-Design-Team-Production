@@ -6707,6 +6707,7 @@ MonoBehaviour:
   moveDelay: 1
   zPosition: -1
   hasAbility: 0
+  animator: {fileID: 331469883}
 --- !u!50 &331469882
 Rigidbody2D:
   serializedVersion: 5
