@@ -2,7 +2,7 @@
 using UnityEngine.SceneManagement;
 using System.Collections;
 
-public class PlayerMove : MonoBehaviour
+public class PlayerMove1 : MonoBehaviour
 {
     [Header("移動設定")]
     public float moveSpeed = 5f;
@@ -78,7 +78,7 @@ public class PlayerMove : MonoBehaviour
         {
             if (hasAbility)
             {
-                EnemyMove enemy = other.GetComponent<EnemyMove>();
+                EnemyMove1 enemy = other.GetComponent<EnemyMove1>();
                 if (enemy != null) enemy.StunEnemy();
             }
             else

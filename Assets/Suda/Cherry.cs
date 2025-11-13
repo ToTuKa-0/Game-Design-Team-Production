@@ -6,7 +6,7 @@ public class Cherry : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            PlayerMove player = other.GetComponent<PlayerMove>();
+            PlayerMove1 player = other.GetComponent<PlayerMove1>();
             if (player != null)
             {
                 player.ActivateCherryAbility();

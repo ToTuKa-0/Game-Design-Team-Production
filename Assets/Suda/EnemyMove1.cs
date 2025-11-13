@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class EnemyMove : MonoBehaviour
+public class EnemyMove1 : MonoBehaviour
 {
     [Header("設定")]
     public float moveSpeed = 2f;
