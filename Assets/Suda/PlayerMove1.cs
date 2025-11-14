@@ -14,6 +14,8 @@ public class PlayerMove1 : MonoBehaviour
 
     [Header("アビリティ関連")]
     public bool hasAbility = false;
+    private bool cherryUsed = false;
+    private float originalSpeed;
 
     [Header("アニメーション設定")]
     public Animator animator;
@@ -22,12 +24,20 @@ public class PlayerMove1 : MonoBehaviour
     private bool hitWall = false;
     private Rigidbody2D rb;
 
-    private float originalSpeed;
-
     public delegate void GemPickupHandler();
     public static event GemPickupHandler OnGemPickup;
 
-    void Start()
+    void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         rb.bodyType = RigidbodyType2D.Kinematic;
@@ -37,33 +47,42 @@ public class PlayerMove1 : MonoBehaviour
             animator = GetComponent<Animator>();
 
         originalSpeed = moveSpeed;
+    }
 
-        string sceneName = SceneManager.GetActiveScene().name;
+    void Start()
+    {
+        WarpToSpawn(SceneManager.GetActiveScene().name);
+    }
 
-        if (sceneName == "SUDA_stage02")
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        WarpToSpawn(scene.name);
+    }
+
+    private void WarpToSpawn(string sceneName)
+    {
+        string spawnName = "";
+        switch (sceneName)
         {
-            GameObject spawn = GameObject.Find("spawn1");
+            case "SUDA_stage02": spawnName = "Spawn1"; break;
+            case "SUDA_stage03": spawnName = "Spawn2"; break;
+            case "SUDA_stage04": spawnName = "Spawn3"; break;
+        }
+
+        if (!string.IsNullOrEmpty(spawnName))
+        {
+            GameObject spawn = GameObject.Find(spawnName);
             if (spawn != null)
                 transform.position = new Vector3(spawn.transform.position.x, spawn.transform.position.y, zPosition);
         }
-        else if (sceneName == "SUDA_stage03")
-        {
-            GameObject spawn = GameObject.Find("spawn2");
-            if (spawn != null)
-                transform.position = new Vector3(spawn.transform.position.x, spawn.transform.position.y, zPosition);
-        }
-        else if (sceneName == "SUDA_stage04")
-        {
-            GameObject spawn = GameObject.Find("spawn3");
-            if (spawn != null)
-                transform.position = new Vector3(spawn.transform.position.x, spawn.transform.position.y, zPosition);
 
+        if (sceneName == "SUDA_stage04")
+        {
             hasAbility = false;
+            cherryUsed = false;
             moveSpeed = originalSpeed;
             OnGemPickup = null;
         }
-
-        transform.position = new Vector3(transform.position.x, transform.position.y, zPosition);
     }
 
     void Update()
@@ -75,9 +94,7 @@ public class PlayerMove1 : MonoBehaviour
 
             float distance = Vector2.Distance(transform.position, mouseWorld);
             if (distance <= stepDistance * maxSteps)
-            {
                 StartCoroutine(MoveTo(mouseWorld));
-            }
         }
 
         transform.position = new Vector3(transform.position.x, transform.position.y, zPosition);
@@ -88,8 +105,7 @@ public class PlayerMove1 : MonoBehaviour
         canMove = false;
         hitWall = false;
 
-        if (animator != null)
-            animator.SetBool("Walk", true);
+        if (animator != null) animator.SetBool("Walk", true);
 
         while (!hitWall && Vector2.Distance(rb.position, target) > 0.05f)
         {
@@ -98,64 +114,68 @@ public class PlayerMove1 : MonoBehaviour
             yield return null;
         }
 
-        if (animator != null)
-            animator.SetBool("Walk", false);
-
+        if (animator != null) animator.SetBool("Walk", false);
         yield return new WaitForSeconds(moveDelay);
         canMove = true;
     }
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Wall"))
+        switch (other.tag)
         {
-            hitWall = true;
-        }
-        else if (other.CompareTag("Enemy"))
-        {
-            if (hasAbility)
-            {
+            case "Wall":
+                hitWall = true;
+                break;
+
+            case "Enemy":
                 EnemyMove1 enemy = other.GetComponent<EnemyMove1>();
                 if (enemy != null)
-                    StartCoroutine(EnemyStun(enemy, 3f));
-            }
-            else
-            {
-                Destroy(gameObject);
-            }
-        }
-        else if (other.CompareTag("Cherry"))
-        {
-            hasAbility = true;
-            Destroy(other.gameObject);
-        }
-        else if (other.CompareTag("Mushroom"))
-        {
-            moveSpeed *= 2f;
-            Destroy(other.gameObject);
-        }
-        else if (other.CompareTag("Gem"))
-        {
-            hasAbility = true;
-            Destroy(other.gameObject);
+                {
+                    if (hasAbility && !cherryUsed)
+                    {
+                        StartCoroutine(EnemyStun(enemy, 3f));
+                        cherryUsed = true;
+                    }
+                    else
+                    {
+                        Destroy(gameObject); 
+                    }
+                }
+                break;
 
-            OnGemPickup?.Invoke();
-        }
-        else if (other.CompareTag("Goal1"))
-        {
-            SceneManager.LoadScene("SUDA_stage02");
-        }
-        else if (other.CompareTag("Goal2"))
-        {
-            moveSpeed = originalSpeed;
-            SceneManager.LoadScene("SUDA_stage03");
-        }
-        else if (other.CompareTag("Goal3"))
-        {
-            moveSpeed = originalSpeed;
-            hasAbility = false;
-            OnGemPickup = null;
-            SceneManager.LoadScene("SUDA_stage04");
+            case "Cherry":
+                hasAbility = true;
+                cherryUsed = false;
+                Destroy(other.gameObject);
+                break;
+
+            case "Mushroom":
+                moveSpeed *= 2f;
+                Destroy(other.gameObject);
+                break;
+
+            case "Gem":
+                hasAbility = true;
+                Destroy(other.gameObject);
+                OnGemPickup?.Invoke();
+                break;
+
+            case "Goal1":
+                SceneManager.LoadScene("SUDA_stage02");
+                break;
+
+            case "Goal2":
+                moveSpeed = originalSpeed;
+                SceneManager.LoadScene("SUDA_stage03");
+                break;
+
+            case "Goal3":
+                moveSpeed = originalSpeed;
+                hasAbility = false;
+                cherryUsed = false;
+                OnGemPickup = null;
+                SceneManager.LoadScene("SUDA_stage04");
+                break;
         }
     }
 
@@ -169,5 +189,6 @@ public class PlayerMove1 : MonoBehaviour
     public void ActivateCherryAbility()
     {
         hasAbility = true;
+        cherryUsed = false;
     }
 }
