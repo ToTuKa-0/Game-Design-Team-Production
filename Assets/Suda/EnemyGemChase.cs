@@ -3,7 +3,7 @@ using UnityEngine;
 public class EnemyGemChase : MonoBehaviour
 {
     public Transform[] movePoints;
-    public float patrolSpeed = 10f;
+    public float patrolSpeed = 2f;
     public float chaseSpeed = 4f;
     public float reachDistance = 0.1f;
 
@@ -12,10 +12,15 @@ public class EnemyGemChase : MonoBehaviour
     private GameObject player;
     private Rigidbody2D rb;
 
+    private Vector2 moveDirection;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        rb.bodyType = RigidbodyType2D.Kinematic;
+
+        rb.bodyType = RigidbodyType2D.Dynamic;
+        rb.gravityScale = 0;
+        rb.constraints = RigidbodyConstraints2D.FreezeRotation;
 
         player = GameObject.FindWithTag("Player");
         PlayerMove1.OnGemPickup += StartChase;
@@ -42,10 +47,11 @@ public class EnemyGemChase : MonoBehaviour
         if (movePoints.Length == 0) return;
 
         Transform target = movePoints[currentIndex];
-        Vector2 newPos = Vector2.MoveTowards(rb.position, target.position, patrolSpeed * Time.deltaTime);
-        rb.MovePosition(newPos);
+        moveDirection = (target.position - transform.position).normalized;
 
-        float dist = Vector2.Distance(rb.position, target.position);
+        rb.velocity = moveDirection * patrolSpeed;
+
+        float dist = Vector2.Distance(transform.position, target.position);
         if (dist < reachDistance)
         {
             currentIndex++;
@@ -58,10 +64,8 @@ public class EnemyGemChase : MonoBehaviour
     {
         if (player == null) return;
 
-        Vector3 targetPos = player.transform.position;
-        targetPos.z = transform.position.z; 
-        Vector2 newPos = Vector2.MoveTowards(rb.position, targetPos, chaseSpeed * Time.deltaTime);
-        rb.MovePosition(newPos);
+        moveDirection = (player.transform.position - transform.position).normalized;
+        rb.velocity = moveDirection * chaseSpeed;
     }
 
     void StartChase()
