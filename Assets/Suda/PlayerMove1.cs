@@ -64,6 +64,7 @@ public class PlayerMove1 : MonoBehaviour
             "SUDA_stage02" => "Spawn1",
             "SUDA_stage03" => "Spawn2",
             "SUDA_stage04" => "Spawn3",
+            "SUDA_stage05" => "Spawn4",
             _ => ""
         };
 
@@ -72,7 +73,11 @@ public class PlayerMove1 : MonoBehaviour
             GameObject spawn = GameObject.Find(spawnName);
             if (spawn != null)
             {
-                transform.position = new Vector3(spawn.transform.position.x, spawn.transform.position.y, zPosition);
+                transform.position = new Vector3(
+                    spawn.transform.position.x,
+                    spawn.transform.position.y,
+                    zPosition
+                );
             }
             else
             {
@@ -87,13 +92,14 @@ public class PlayerMove1 : MonoBehaviour
             moveSpeed = originalSpeed;
             OnGemPickup = null;
         }
+
     }
 
     private void ResetControlFlags()
     {
         canMove = true;
         hitWall = false;
-        StopAllCoroutines(); 
+        StopAllCoroutines();
     }
 
     void Update()
@@ -153,7 +159,6 @@ public class PlayerMove1 : MonoBehaviour
                 }
                 break;
 
-
             case "Cherry":
                 hasAbility = true;
                 cherryUsed = false;
@@ -186,6 +191,11 @@ public class PlayerMove1 : MonoBehaviour
                 cherryUsed = false;
                 OnGemPickup = null;
                 SceneManager.LoadScene("SUDA_stage04");
+                break;
+
+            case "Goal4":
+                moveSpeed = originalSpeed;
+                SceneManager.LoadScene("SUDA_stage05");
                 break;
         }
     }
