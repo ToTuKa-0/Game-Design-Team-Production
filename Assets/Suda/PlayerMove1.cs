@@ -27,9 +27,23 @@ public class PlayerMove1 : MonoBehaviour
     public delegate void GemPickupHandler();
     public static event GemPickupHandler OnGemPickup;
 
+    void Awake()
+    {
+        rb = GetComponent<Rigidbody2D>();
+        rb.bodyType = RigidbodyType2D.Kinematic;
+        rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+
+        if (animator == null) animator = GetComponent<Animator>();
+
+        originalSpeed = moveSpeed;
+
+        DontDestroyOnLoad(this.gameObject);
+    }
+
     void OnEnable()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
+        ResetControlFlags();
     }
 
     void OnDisable()
@@ -37,43 +51,33 @@ public class PlayerMove1 : MonoBehaviour
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
-    void Awake()
-    {
-        rb = GetComponent<Rigidbody2D>();
-        rb.bodyType = RigidbodyType2D.Kinematic;
-        rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
-
-        if (animator == null)
-            animator = GetComponent<Animator>();
-
-        originalSpeed = moveSpeed;
-    }
-
-    void Start()
-    {
-        WarpToSpawn(SceneManager.GetActiveScene().name);
-    }
-
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         WarpToSpawn(scene.name);
+        ResetControlFlags();
     }
 
     private void WarpToSpawn(string sceneName)
     {
-        string spawnName = "";
-        switch (sceneName)
+        string spawnName = sceneName switch
         {
-            case "SUDA_stage02": spawnName = "Spawn1"; break;
-            case "SUDA_stage03": spawnName = "Spawn2"; break;
-            case "SUDA_stage04": spawnName = "Spawn3"; break;
-        }
+            "SUDA_stage02" => "Spawn1",
+            "SUDA_stage03" => "Spawn2",
+            "SUDA_stage04" => "Spawn3",
+            _ => ""
+        };
 
         if (!string.IsNullOrEmpty(spawnName))
         {
             GameObject spawn = GameObject.Find(spawnName);
             if (spawn != null)
+            {
                 transform.position = new Vector3(spawn.transform.position.x, spawn.transform.position.y, zPosition);
+            }
+            else
+            {
+                Debug.LogWarning("Spawn not found: " + spawnName);
+            }
         }
 
         if (sceneName == "SUDA_stage04")
@@ -85,6 +89,13 @@ public class PlayerMove1 : MonoBehaviour
         }
     }
 
+    private void ResetControlFlags()
+    {
+        canMove = true;
+        hitWall = false;
+        StopAllCoroutines(); 
+    }
+
     void Update()
     {
         if (Input.GetMouseButtonDown(0) && canMove)
@@ -92,8 +103,7 @@ public class PlayerMove1 : MonoBehaviour
             Vector3 mouseWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             mouseWorld.z = zPosition;
 
-            float distance = Vector2.Distance(transform.position, mouseWorld);
-            if (distance <= stepDistance * maxSteps)
+            if (Vector2.Distance(transform.position, mouseWorld) <= stepDistance * maxSteps)
                 StartCoroutine(MoveTo(mouseWorld));
         }
 
@@ -138,7 +148,7 @@ public class PlayerMove1 : MonoBehaviour
                     }
                     else
                     {
-                        Destroy(gameObject); 
+                        Destroy(gameObject);
                     }
                 }
                 break;
