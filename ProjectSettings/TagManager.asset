@@ -12,6 +12,7 @@ TagManager:
   - Goal2
   - Goal3
   - Mushroom
+  - Gem
   layers:
   - Default
   - TransparentFX
