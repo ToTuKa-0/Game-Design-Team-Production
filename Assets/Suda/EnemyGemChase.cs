@@ -3,7 +3,7 @@ using UnityEngine;
 public class EnemyGemChase : MonoBehaviour
 {
     public Transform[] movePoints;
-    public float patrolSpeed = 2f;
+    public float patrolSpeed = 10f;
     public float chaseSpeed = 4f;
     public float reachDistance = 0.1f;
 
