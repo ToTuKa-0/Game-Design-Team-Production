@@ -22,6 +22,8 @@ public class PlayerMove1 : MonoBehaviour
     private bool hitWall = false;
     private Rigidbody2D rb;
 
+    private float originalSpeed;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -31,15 +33,26 @@ public class PlayerMove1 : MonoBehaviour
         if (animator == null)
             animator = GetComponent<Animator>();
 
-        if (SceneManager.GetActiveScene().name == "SUDA_stage02")
+        originalSpeed = moveSpeed; 
+
+        string sceneName = SceneManager.GetActiveScene().name;
+
+        if (sceneName == "SUDA_stage02")
         {
             GameObject spawn = GameObject.Find("spawn1");
             if (spawn != null)
-            {
                 transform.position = new Vector3(spawn.transform.position.x, spawn.transform.position.y, zPosition);
-            }
         }
+        else if (sceneName == "SUDA_stage03")
+        {
+            GameObject spawn = GameObject.Find("spawn2");
+            if (spawn != null)
+                transform.position = new Vector3(spawn.transform.position.x, spawn.transform.position.y, zPosition);
+        }
+
+        transform.position = new Vector3(transform.position.x, transform.position.y, zPosition);
     }
+
 
     void Update()
     {
@@ -92,9 +105,7 @@ public class PlayerMove1 : MonoBehaviour
             {
                 EnemyMove1 enemy = other.GetComponent<EnemyMove1>();
                 if (enemy != null)
-                {
                     StartCoroutine(EnemyStun(enemy, 3f));
-                }
             }
             else
             {
@@ -106,17 +117,27 @@ public class PlayerMove1 : MonoBehaviour
             hasAbility = true;
             Destroy(other.gameObject);
         }
+        else if (other.CompareTag("Mushroom"))
+        {
+            moveSpeed *= 2f;           
+            Destroy(other.gameObject); 
+        }
         else if (other.CompareTag("Goal1"))
         {
             SceneManager.LoadScene("SUDA_stage02");
+        }
+        else if (other.CompareTag("Goal2"))
+        {
+            moveSpeed = originalSpeed; 
+            SceneManager.LoadScene("SUDA_stage03");
         }
     }
 
     IEnumerator EnemyStun(EnemyMove1 enemy, float duration)
     {
-        enemy.StunEnemy(); 
+        enemy.StunEnemy();
         yield return new WaitForSeconds(duration);
-        enemy.RecoverEnemy(); 
+        enemy.RecoverEnemy();
     }
 
     public void ActivateCherryAbility()
