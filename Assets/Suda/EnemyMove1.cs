@@ -56,6 +56,12 @@ public class EnemyMove1 : MonoBehaviour
         isStunned = true;
     }
 
+    public void RecoverEnemy()
+    {
+        isStunned = false; 
+    }
+
+
     void Update()
     {
         transform.position = new Vector3(transform.position.x, transform.position.y, zPosition);

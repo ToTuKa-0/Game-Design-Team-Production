@@ -30,6 +30,15 @@ public class PlayerMove1 : MonoBehaviour
 
         if (animator == null)
             animator = GetComponent<Animator>();
+
+        if (SceneManager.GetActiveScene().name == "SUDA_stage02")
+        {
+            GameObject spawn = GameObject.Find("spawn1");
+            if (spawn != null)
+            {
+                transform.position = new Vector3(spawn.transform.position.x, spawn.transform.position.y, zPosition);
+            }
+        }
     }
 
     void Update()
@@ -82,7 +91,10 @@ public class PlayerMove1 : MonoBehaviour
             if (hasAbility)
             {
                 EnemyMove1 enemy = other.GetComponent<EnemyMove1>();
-                if (enemy != null) enemy.StunEnemy();
+                if (enemy != null)
+                {
+                    StartCoroutine(EnemyStun(enemy, 3f));
+                }
             }
             else
             {
@@ -98,6 +110,13 @@ public class PlayerMove1 : MonoBehaviour
         {
             SceneManager.LoadScene("SUDA_stage02");
         }
+    }
+
+    IEnumerator EnemyStun(EnemyMove1 enemy, float duration)
+    {
+        enemy.StunEnemy(); 
+        yield return new WaitForSeconds(duration);
+        enemy.RecoverEnemy(); 
     }
 
     public void ActivateCherryAbility()
