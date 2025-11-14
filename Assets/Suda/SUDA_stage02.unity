@@ -6106,6 +6106,7 @@ MonoBehaviour:
   - {fileID: 989230899}
   speed: 3
   reachDistance: 0.1
+  fixedZ: -1
 --- !u!1 &1175539036
 GameObject:
   m_ObjectHideFlags: 0
@@ -10243,6 +10244,7 @@ MonoBehaviour:
   - {fileID: 386115171}
   speed: 3
   reachDistance: 0.1
+  fixedZ: -1
 --- !u!1 &2050994827
 GameObject:
   m_ObjectHideFlags: 0
