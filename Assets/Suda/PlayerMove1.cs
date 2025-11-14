@@ -24,6 +24,9 @@ public class PlayerMove1 : MonoBehaviour
 
     private float originalSpeed;
 
+    public delegate void GemPickupHandler();
+    public static event GemPickupHandler OnGemPickup;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -33,7 +36,7 @@ public class PlayerMove1 : MonoBehaviour
         if (animator == null)
             animator = GetComponent<Animator>();
 
-        originalSpeed = moveSpeed; 
+        originalSpeed = moveSpeed;
 
         string sceneName = SceneManager.GetActiveScene().name;
 
@@ -52,7 +55,6 @@ public class PlayerMove1 : MonoBehaviour
 
         transform.position = new Vector3(transform.position.x, transform.position.y, zPosition);
     }
-
 
     void Update()
     {
@@ -119,8 +121,15 @@ public class PlayerMove1 : MonoBehaviour
         }
         else if (other.CompareTag("Mushroom"))
         {
-            moveSpeed *= 2f;           
-            Destroy(other.gameObject); 
+            moveSpeed *= 2f;
+            Destroy(other.gameObject);
+        }
+        else if (other.CompareTag("Gem"))  
+        {
+            hasAbility = true;           
+            Destroy(other.gameObject);
+
+            OnGemPickup?.Invoke();
         }
         else if (other.CompareTag("Goal1"))
         {
@@ -128,7 +137,7 @@ public class PlayerMove1 : MonoBehaviour
         }
         else if (other.CompareTag("Goal2"))
         {
-            moveSpeed = originalSpeed; 
+            moveSpeed = originalSpeed;
             SceneManager.LoadScene("SUDA_stage03");
         }
     }

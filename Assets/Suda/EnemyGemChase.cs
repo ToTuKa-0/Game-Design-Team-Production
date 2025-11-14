@@ -16,23 +16,21 @@ public class EnemyGemChase : MonoBehaviour
     private bool isChasing = false;
 
     private GameObject player;
-    private PlayerMove1 playerScript;
 
     void Start()
     {
         player = GameObject.FindWithTag("Player");
-        if (player != null)
-        {
-            playerScript = player.GetComponent<PlayerMove1>();
-        }
+
+        PlayerMove1.OnGemPickup += StartChase;
+    }
+
+    void OnDestroy()
+    {
+        PlayerMove1.OnGemPickup -= StartChase;
     }
 
     void Update()
     {
-        if (playerScript == null) return;
-
-        isChasing = playerScript.hasAbility;
-
         if (isChasing)
         {
             ChasePlayer();
@@ -62,8 +60,15 @@ public class EnemyGemChase : MonoBehaviour
 
     void ChasePlayer()
     {
+        if (player == null) return;
+
         Vector3 targetPos = player.transform.position;
         targetPos.z = transform.position.z; 
         transform.position = Vector2.MoveTowards(transform.position, targetPos, chaseSpeed * Time.deltaTime);
+    }
+
+    void StartChase()
+    {
+        isChasing = true;
     }
 }
