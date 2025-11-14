@@ -52,6 +52,16 @@ public class PlayerMove1 : MonoBehaviour
             if (spawn != null)
                 transform.position = new Vector3(spawn.transform.position.x, spawn.transform.position.y, zPosition);
         }
+        else if (sceneName == "SUDA_stage04")
+        {
+            GameObject spawn = GameObject.Find("spawn3");
+            if (spawn != null)
+                transform.position = new Vector3(spawn.transform.position.x, spawn.transform.position.y, zPosition);
+
+            hasAbility = false;
+            moveSpeed = originalSpeed;
+            OnGemPickup = null;
+        }
 
         transform.position = new Vector3(transform.position.x, transform.position.y, zPosition);
     }
@@ -124,9 +134,9 @@ public class PlayerMove1 : MonoBehaviour
             moveSpeed *= 2f;
             Destroy(other.gameObject);
         }
-        else if (other.CompareTag("Gem"))  
+        else if (other.CompareTag("Gem"))
         {
-            hasAbility = true;           
+            hasAbility = true;
             Destroy(other.gameObject);
 
             OnGemPickup?.Invoke();
@@ -139,6 +149,13 @@ public class PlayerMove1 : MonoBehaviour
         {
             moveSpeed = originalSpeed;
             SceneManager.LoadScene("SUDA_stage03");
+        }
+        else if (other.CompareTag("Goal3"))
+        {
+            moveSpeed = originalSpeed;
+            hasAbility = false;
+            OnGemPickup = null;
+            SceneManager.LoadScene("SUDA_stage04");
         }
     }
 
