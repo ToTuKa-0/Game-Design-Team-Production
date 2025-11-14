@@ -6706,7 +6706,7 @@ MonoBehaviour:
   stepDistance: 1
   moveDelay: 1
   zPosition: -1
-  hasAbility: 0
+  hasAbility: 1
   animator: {fileID: 331469883}
 --- !u!50 &331469882
 Rigidbody2D:
