@@ -6,7 +6,7 @@ public class EnemyPatrol : MonoBehaviour
     public Transform[] movePoints;
 
     [Header("移動速度")]
-    public float speed = 2f;
+    public float speed = 3f;
 
     [Header("目的地への許容距離")]
     public float reachDistance = 0.1f;
