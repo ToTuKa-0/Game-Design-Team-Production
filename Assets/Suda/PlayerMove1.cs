@@ -2,10 +2,11 @@
 using UnityEngine.SceneManagement;
 using System.Collections;
 
+[RequireComponent(typeof(Rigidbody2D))]
 public class PlayerMove1 : MonoBehaviour
 {
     [Header("移動設定")]
-    public float moveSpeed = 5f;
+    public float moveSpeed = 10f;
     public int maxSteps = 3;
     public float stepDistance = 1f;
     public float moveDelay = 2f;
@@ -15,15 +16,17 @@ public class PlayerMove1 : MonoBehaviour
     public bool hasAbility = false;
 
     [Header("アニメーション設定")]
-    public Animator animator; 
+    public Animator animator;
 
     private bool canMove = true;
-    private Vector3 targetPos;
     private bool hitWall = false;
+    private Rigidbody2D rb;
 
     void Start()
     {
-        targetPos = transform.position;
+        rb = GetComponent<Rigidbody2D>();
+        rb.bodyType = RigidbodyType2D.Kinematic;
+        rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
 
         if (animator == null)
             animator = GetComponent<Animator>();
@@ -52,12 +55,12 @@ public class PlayerMove1 : MonoBehaviour
         hitWall = false;
 
         if (animator != null)
-            animator.SetBool("Walk", true); 
+            animator.SetBool("Walk", true);
 
-        while (!hitWall && Vector2.Distance(transform.position, target) > 0.05f)
+        while (!hitWall && Vector2.Distance(rb.position, target) > 0.05f)
         {
-            transform.position = Vector2.MoveTowards(transform.position, target, moveSpeed * Time.deltaTime);
-            transform.position = new Vector3(transform.position.x, transform.position.y, zPosition);
+            Vector2 newPos = Vector2.MoveTowards(rb.position, target, moveSpeed * Time.deltaTime);
+            rb.MovePosition(newPos);
             yield return null;
         }
 
