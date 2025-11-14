@@ -2,25 +2,22 @@ using UnityEngine;
 
 public class EnemyGemChase : MonoBehaviour
 {
-    [Header("巡回ポイント")]
     public Transform[] movePoints;
-
-    [Header("移動設定")]
     public float patrolSpeed = 2f;
     public float chaseSpeed = 4f;
-
-    [Header("目的地への許容距離")]
     public float reachDistance = 0.1f;
 
     private int currentIndex = 0;
     private bool isChasing = false;
-
     private GameObject player;
+    private Rigidbody2D rb;
 
     void Start()
     {
-        player = GameObject.FindWithTag("Player");
+        rb = GetComponent<Rigidbody2D>();
+        rb.bodyType = RigidbodyType2D.Kinematic;
 
+        player = GameObject.FindWithTag("Player");
         PlayerMove1.OnGemPickup += StartChase;
     }
 
@@ -31,14 +28,13 @@ public class EnemyGemChase : MonoBehaviour
 
     void Update()
     {
+        if (player == null)
+            player = GameObject.FindWithTag("Player");
+
         if (isChasing)
-        {
             ChasePlayer();
-        }
         else
-        {
             Patrol();
-        }
     }
 
     void Patrol()
@@ -46,10 +42,10 @@ public class EnemyGemChase : MonoBehaviour
         if (movePoints.Length == 0) return;
 
         Transform target = movePoints[currentIndex];
+        Vector2 newPos = Vector2.MoveTowards(rb.position, target.position, patrolSpeed * Time.deltaTime);
+        rb.MovePosition(newPos);
 
-        transform.position = Vector2.MoveTowards(transform.position, target.position, patrolSpeed * Time.deltaTime);
-
-        float dist = Vector2.Distance(transform.position, target.position);
+        float dist = Vector2.Distance(rb.position, target.position);
         if (dist < reachDistance)
         {
             currentIndex++;
@@ -64,7 +60,8 @@ public class EnemyGemChase : MonoBehaviour
 
         Vector3 targetPos = player.transform.position;
         targetPos.z = transform.position.z; 
-        transform.position = Vector2.MoveTowards(transform.position, targetPos, chaseSpeed * Time.deltaTime);
+        Vector2 newPos = Vector2.MoveTowards(rb.position, targetPos, chaseSpeed * Time.deltaTime);
+        rb.MovePosition(newPos);
     }
 
     void StartChase()

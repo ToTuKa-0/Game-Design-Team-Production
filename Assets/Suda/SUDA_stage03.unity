@@ -298,6 +298,7 @@ GameObject:
   - component: {fileID: 46639197}
   - component: {fileID: 46639196}
   - component: {fileID: 46639195}
+  - component: {fileID: 46639198}
   m_Layer: 0
   m_Name: Gem
   m_TagString: Gem
@@ -424,6 +425,28 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &46639198
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 46639194}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 6028b21e06802214a859d0f278ccf7bb, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &72486896
 GameObject:
   m_ObjectHideFlags: 0
@@ -4337,9 +4360,9 @@ MonoBehaviour:
   - {fileID: 23600481}
   - {fileID: 1751041826}
   - {fileID: 1389068472}
-  patrolSpeed: 2
+  patrolSpeed: 10
   chaseSpeed: 4
-  reachDistance: 0.1
+  reachDistance: 1
 --- !u!95 &694372453
 Animator:
   serializedVersion: 7
@@ -7896,9 +7919,9 @@ MonoBehaviour:
   - {fileID: 2061650803}
   - {fileID: 957416655}
   - {fileID: 584092797}
-  patrolSpeed: 2
+  patrolSpeed: 10
   chaseSpeed: 4
-  reachDistance: 0.1
+  reachDistance: 1
 --- !u!95 &1508310739
 Animator:
   serializedVersion: 7
@@ -9237,7 +9260,7 @@ Transform:
   m_GameObject: {fileID: 1751041825}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.22, y: 3.36, z: 0}
+  m_LocalPosition: {x: 2.22, y: 4.33, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -10775,7 +10798,7 @@ Transform:
   m_GameObject: {fileID: 2061650802}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.74, y: 2.69, z: 0}
+  m_LocalPosition: {x: 2.3, y: 2.69, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
