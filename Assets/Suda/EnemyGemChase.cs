@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody2D))]
 public class EnemyGemChase : MonoBehaviour
 {
     public Transform[] movePoints;
@@ -12,18 +13,20 @@ public class EnemyGemChase : MonoBehaviour
     private GameObject player;
     private Rigidbody2D rb;
 
-    private Vector2 moveDirection;
+    private Vector2 targetPosition;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
 
         rb.bodyType = RigidbodyType2D.Dynamic;
-        rb.gravityScale = 0;
+        rb.gravityScale = 0f;
         rb.constraints = RigidbodyConstraints2D.FreezeRotation;
 
         player = GameObject.FindWithTag("Player");
         PlayerMove1.OnGemPickup += StartChase;
+
+        SetNextPatrolTarget();
     }
 
     void OnDestroy()
@@ -37,35 +40,49 @@ public class EnemyGemChase : MonoBehaviour
             player = GameObject.FindWithTag("Player");
 
         if (isChasing)
-            ChasePlayer();
+            UpdateChaseTarget();
         else
-            Patrol();
+            UpdatePatrolTarget();
     }
 
-    void Patrol()
+    void FixedUpdate()
     {
-        if (movePoints.Length == 0) return;
+        if ((Vector2)rb.position == targetPosition) return;
 
-        Transform target = movePoints[currentIndex];
-        moveDirection = (target.position - transform.position).normalized;
+        float speed = isChasing ? chaseSpeed : patrolSpeed;
+        Vector2 newPos = Vector2.MoveTowards(rb.position, targetPosition, speed * Time.fixedDeltaTime);
+        rb.MovePosition(newPos);
+    }
 
-        rb.velocity = moveDirection * patrolSpeed;
+    private void UpdatePatrolTarget()
+    {
+        if (movePoints == null || movePoints.Length == 0) return;
 
-        float dist = Vector2.Distance(transform.position, target.position);
+        Vector2 currentTarget = (Vector2)movePoints[currentIndex].position;
+        targetPosition = new Vector2(currentTarget.x, currentTarget.y);
+
+        float dist = Vector2.Distance(transform.position, currentTarget);
         if (dist < reachDistance)
         {
             currentIndex++;
             if (currentIndex >= movePoints.Length)
                 currentIndex = 0;
+
+            SetNextPatrolTarget();
         }
     }
 
-    void ChasePlayer()
+    private void SetNextPatrolTarget()
+    {
+        if (movePoints == null || movePoints.Length == 0) return;
+        targetPosition = (Vector2)movePoints[currentIndex].position;
+    }
+
+    private void UpdateChaseTarget()
     {
         if (player == null) return;
-
-        moveDirection = (player.transform.position - transform.position).normalized;
-        rb.velocity = moveDirection * chaseSpeed;
+        Vector3 p = player.transform.position;
+        targetPosition = new Vector2(p.x, p.y);
     }
 
     void StartChase()

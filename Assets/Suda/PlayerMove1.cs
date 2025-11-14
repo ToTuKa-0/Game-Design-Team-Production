@@ -148,10 +148,11 @@ public class PlayerMove1 : MonoBehaviour
                     }
                     else
                     {
-                        Destroy(gameObject);
+                        SceneManager.LoadScene("SUDA_GameOver");
                     }
                 }
                 break;
+
 
             case "Cherry":
                 hasAbility = true;
