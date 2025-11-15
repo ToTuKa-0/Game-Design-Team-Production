@@ -27,7 +27,7 @@ EditorBuildSettings:
     path: Assets/Suda/SUDA_stage04.unity
     guid: d123bd4d7b3ab394a9e049d1e3661374
   - enabled: 1
-    path: Assets/Totuka/SUDA_stage05.unity
+    path: Assets/Suda/SUDA_stage05.unity
     guid: cc0a5b5248bb49340a4ba0b62c556f40
   - enabled: 1
     path: Assets/Suda/SUDA_Tittle.unity
