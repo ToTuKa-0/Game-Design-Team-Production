@@ -47,5 +47,15 @@ public class PlayerMoveW : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
         Debug.Log("重なった相手：" + other.gameObject.name);
+
+        if (other.CompareTag("Enemy"))
+        {
+            Debug.Log("敵と接触（Trigger） → GAME OVER");
+        }
+
+        if (other.CompareTag("Goal"))
+        {
+            Debug.Log("ゴール到達！"); //クリア演出
+        }
     }
 }
