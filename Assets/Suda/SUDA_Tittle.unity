@@ -6094,8 +6094,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -50, y: 340}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchoredPosition: {x: 39.06537, y: 340}
+  m_SizeDelta: {x: 259.3769, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1272347534
 MonoBehaviour:
@@ -6117,7 +6117,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Game Tittle
+  m_text: "\u8131\u51FA\uFF01\u6D1E\u7A9F\u63A2\u691C"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 7b91dfa0d2b03554b8675e0995bb16c6, type: 2}
   m_sharedMaterial: {fileID: -3583079857348157836, guid: 7b91dfa0d2b03554b8675e0995bb16c6, type: 2}
